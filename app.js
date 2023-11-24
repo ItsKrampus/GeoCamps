@@ -6,7 +6,7 @@ const methodOverride=require('method-override');
 const ejsMate=require('ejs-mate')
 const catchAsync=require("./utils/catchAsync")
 const ExpressError=require("./utils/expressError")
-
+const Joi=require('joi')
 
 mongoose.connect('mongodb://127.0.0.1:27017/YelpCamp', {
     useNewUrlParser: true,
@@ -46,7 +46,22 @@ app.get('/campgrounds/new', (req,res)=>{
 })
 
 app.post("/campgrounds", catchAsync( async (req,res)=>{
-    if(!req.body.campground) throw new ExpressError("Invalid Campground Data!", 400)
+    // if(!req.body.campground) throw new ExpressError("Invalid Campground Data!", 400)
+    const campgroundSchema=Joi.object({
+        campground: Joi.object({
+            title: Joi.string().required(),
+            price: Joi.number().required().min(0),
+            Image: Joi.string().required(),
+            description: Joi.string().required(),
+            location: Joi.string().required()
+        }).required()
+    })
+    const {error}= campgroundSchema.validate(req.body)
+    if (error){
+        const msg=error.details.map(el=> el.message).join(',')
+        throw new ExpressError(msg, 400)
+    }
+    console.log(result);
     const campground= new Campground(req.body.campground)
     await campground.save();
     res.redirect(`campgrounds/${campground._id}`)
@@ -85,8 +100,9 @@ app.all('*',(req, res, next)=>{
 
 
 app.use((err,req,res,next)=>{
-    const {statusCode=500, message='Something went wrong'}=err;
-    res.status(statusCode).send(message);
+    const {statusCode=500}=err;
+    if(!err.message) err.message="Oh No Something Went Wrong!"
+    res.status(statusCode).render('error', {err});
 })
 
 
