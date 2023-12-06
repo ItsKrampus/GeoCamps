@@ -12,6 +12,7 @@ const Review=require("./models/review.js")
 
 
 const campgrounds=require('./routes/campgrounds')
+const reviews=require('./routes/reviews')
 
 mongoose.connect('mongodb://127.0.0.1:27017/YelpCamp', {
     useNewUrlParser: true,
@@ -38,19 +39,10 @@ app.use(methodOverride('_method'))
 
 
 
-const validateReview=(req,res,next)=>{
-    const {error}=reviewSchema.validate(req.body);
-    if (error){
-        const msg=error.details.map(el=> el.message).join(',')
-        throw new ExpressError(msg, 400)
-    }else{
-        next();
-    }
-}
 
 
 app.use('/campgrounds', campgrounds)
-
+app.use('/campgrounds/:id/reviews', reviews)
 
 app.get('/', (req,res)=>{
     res.render('home')
@@ -58,24 +50,7 @@ app.get('/', (req,res)=>{
 
 
 
-app.post('/campgrounds/:id/reviews', validateReview, catchAsync(async (req,res)=>{
-    const campground= await Campground.findById(req.params.id);
-    const review= new Review(req.body.review)
-    campground.reviews.push(review)
-    review.save();
-    campground.save();
-    res.redirect(`/campgrounds/${campground._id}`)
-}))
 
-
-app.delete('/campgrounds/:id/reviews/:reviewId', catchAsync(async (req,res)=>{
-    const {id,reviewId}=req.params
-    await Campground.findByIdAndUpdate(id, {$pull:{reviews: reviewId}})
-    await Review.findByIdAndDelete(reviewId)
-    res.redirect(`/campgrounds/${id}`)
-
-
-}))
 
 
 
