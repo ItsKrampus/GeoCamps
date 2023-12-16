@@ -1,0 +1,46 @@
+.px-3{
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    margin-top: 15vw;
+}
+body{
+    height: 100vh;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+    url("https://img.itinari.com/pages/images/original/d32c0230-68a6-41a5-9e03-3e48b077c01e-svaneti-1.jpg?ch=DPR&dpr=2.625&w=1200&h=800&s=e7601938cc18bdc6c2896546cf0ed86c");
+    background-size: cover;
+    background-position: center;
+    
+}
+
+.lead{
+    color: white;
+}
+
+.cover-container {
+    max-width: 75vw;
+  }
+  
+  .nav-link {
+      padding: 0.25rem 0;
+      font-weight: 700;
+      color: rgba(255,255,255,0.5);
+      margin-left: 1rem;
+      border-bottom: 0.25rem solid transparent;
+  }
+  
+  .nav-link:hover{
+      color: rgba(255,255,255,0.5);
+      border-bottom-color:rgba(255,255,255,0.5);
+  }
+  
+  .nav-link.active {
+      color: white;
+      border-bottom-color:white;
+  
+  }
+  
+  .btn-secondary, .btn-secondary:hover{
+      color: #333;
+      text-shadow: none;
+  }
