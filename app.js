@@ -5,10 +5,6 @@ if (process.env.NODE_ENV !=="production"){
 
 
 
-
-
-
-
 const express=require('express');
 const path=require('path');
 const mongoose=require('mongoose');
@@ -28,11 +24,10 @@ const campgroundsRoutes=require('./routes/campgrounds');
 const reviewRoutes=require('./routes/reviews');
 
 const mongoSanitize=require('express-mongo-sanitize')
+const MongoDBStore=require('connect-mongo')(session);
 
 
 
-
-// 'mongodb://127.0.0.1:27017/YelpCamp'
 
 
 mongoose.connect(dbUrl, {
@@ -60,7 +55,19 @@ app.use(express.static(path.join(__dirname, 'public')))
 app.use(mongoSanitize())
 app.use(helmet({contentSecurityPolicy: false}))
 
+const store= new MongoDBStore({
+    url:dbUrl,
+    touchAfter:24*60*60
+});
+
+store.on("error",function(e){
+    console.log("SESSION STORE ERROR!", e)
+})
+
+
+
 const sessionConfig={
+    store,
     name:'session',
     secret:'thisshouldbeabettersecret!',
     resave: false,
