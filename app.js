@@ -8,6 +8,7 @@ if (process.env.NODE_ENV !=="production"){
 
 
 
+
 const express=require('express');
 const path=require('path');
 const mongoose=require('mongoose');
@@ -19,20 +20,22 @@ const flash=require('connect-flash');
 const passport=require('passport');
 const LocalStrategy=require("passport-local");
 const User=require('./models/user');
-
+const helmet=require('helmet')
+const dbUrl=process.env.DB_URL
 
 const userRoutes=require('./routes/users');
 const campgroundsRoutes=require('./routes/campgrounds');
 const reviewRoutes=require('./routes/reviews');
 
+const mongoSanitize=require('express-mongo-sanitize')
 
 
 
 
+// 'mongodb://127.0.0.1:27017/YelpCamp'
 
 
-
-mongoose.connect('mongodb://127.0.0.1:27017/YelpCamp', {
+mongoose.connect(dbUrl, {
     // useNewUrlParser: true,
     // useCreateIndex: true,
     // useUnifiedTopology: true
@@ -54,15 +57,17 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.urlencoded({extended: true}))
 app.use(methodOverride('_method'))
 app.use(express.static(path.join(__dirname, 'public')))
-
-
+app.use(mongoSanitize())
+app.use(helmet({contentSecurityPolicy: false}))
 
 const sessionConfig={
+    name:'session',
     secret:'thisshouldbeabettersecret!',
     resave: false,
     saveUninitialized: true,
     cookie:{
         httpOnly: true,
+        // secure: true,
         expires: Date.now()+ 1000 * 60 * 60 * 24 * 7,
         maxAge: 1000 * 60 * 60 * 24 * 7
     }
