@@ -5,7 +5,7 @@
     margin-top: 15vw;
 }
 body{
-    height: 100vh;
+    height: 100dvh;
     background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
     url("https://img.itinari.com/pages/images/original/d32c0230-68a6-41a5-9e03-3e48b077c01e-svaneti-1.jpg?ch=DPR&dpr=2.625&w=1200&h=800&s=e7601938cc18bdc6c2896546cf0ed86c");
     background-size: cover;
